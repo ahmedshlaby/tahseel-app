@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0F3460">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="تحصيل">
+<title>تحصيل — الأهلي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f1e;--surface:#111827;--surface2:#1a2236;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--blue:#2563eb;--blue-l:#3b82f6;--blue-d:rgba(37,99,235,0.15);--green:#059669;--green-l:#10b981;--green-d:rgba(5,150,105,0.15);--amber:#d97706;--amber-d:rgba(217,119,6,0.15);--red:#dc2626;--red-d:rgba(220,38,38,0.12);--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--r:14px;--rs:8px;--sb:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);height:100dvh;overflow:hidden;position:fixed;width:100%}
+#app{width:100%;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.statusbar{background:linear-gradient(135deg,#0d1f3c,#0F3460);padding:12px 18px 10px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;border-bottom:1px solid rgba(37,99,235,0.3)}
+.sb-title{font-size:15px;font-weight:700;color:#fff}.sb-date{font-size:11px;color:#90afd4}
+.sb-badge{background:var(--blue-d);border:1px solid rgba(37,99,235,0.4);color:#90c0ff;font-size:10px;padding:3px 10px;border-radius:20px}
+.nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;padding:0 4px}
+.nav-tab{flex:1;padding:11px 2px;text-align:center;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:'Cairo',sans-serif}
+.nav-tab.active{color:var(--blue-l);border-bottom-color:var(--blue-l)}
+.screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:14px;padding-bottom:calc(14px + var(--sb));display:none;-webkit-overflow-scrolling:touch}
+.screen.active{display:block}
+.screen::-webkit-scrollbar{width:3px}
+.screen::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.bal-card{background:linear-gradient(135deg,#0d2151,#0F3460 60%,#1a4080);border-radius:var(--r);padding:18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid rgba(37,99,235,0.35)}
+.bal-card::before{content:'';position:absolute;top:-30px;left:-30px;width:120px;height:120px;border-radius:50%;background:rgba(37,99,235,0.1);pointer-events:none}
+.bal-lbl{font-size:11px;color:#90afd4;margin-bottom:4px}.bal-amt{font-size:32px;font-weight:700;color:#fff}
+.bal-amt span{font-size:14px;font-weight:500;color:#90afd4;margin-right:4px}.bal-sub{font-size:11px;color:#7098c0;margin-top:6px}
+.bal-btn{position:absolute;top:14px;left:14px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#c0d4f0;font-size:11px;padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:500}
+.prog-wrap{background:rgba(0,0,0,0.2);border-radius:20px;height:6px;margin-top:10px;overflow:hidden}
+.prog-bar{height:6px;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--blue-l));transition:width .4s ease}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px}
+.m-lbl{font-size:11px;color:var(--text3);margin-bottom:5px}.m-val{font-size:19px;font-weight:700}
+.c-blue{color:var(--blue-l)}.c-green{color:var(--green-l)}.c-amber{color:#fbbf24}.c-white{color:var(--text)}
+.m-unit{font-size:11px;color:var(--text3);font-weight:400}
+.sec-title{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:11px 44px 11px 14px;font-size:14px;color:var(--text);font-family:'Cairo',sans-serif}
+.search-input:focus{outline:none;border-color:var(--blue)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;pointer-events:none}
+.search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:var(--surface2);border:none;color:var(--text3);width:22px;height:22px;border-radius:50%;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;font-family:'Cairo',sans-serif}
+.search-clear.show{display:flex}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:10px;transition:border-color .2s}
+.card:active{border-color:var(--border2)}
+.mrow{display:flex;align-items:center;gap:10px}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.av0{background:var(--blue-d);color:var(--blue-l);border:1px solid rgba(37,99,235,0.25)}
+.av1{background:var(--green-d);color:var(--green-l);border:1px solid rgba(5,150,105,0.25)}
+.av2{background:var(--amber-d);color:#fbbf24;border:1px solid rgba(217,119,6,0.25)}
+.minfo{flex:1;min-width:0}.mname{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msub{font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mname .hl{background:rgba(37,99,235,0.3);border-radius:3px;color:#93c5fd}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;margin-top:4px}
+.b-pending{background:var(--blue-d);color:#90c0ff;border:1px solid rgba(37,99,235,0.2)}
+.b-done{background:var(--green-d);color:#6ee7b7;border:1px solid rgba(5,150,105,0.2)}
+.b-partial{background:var(--amber-d);color:#fcd34d;border:1px solid rgba(217,119,6,0.2)}
+.b-none{background:var(--surface2);color:var(--text3);border:1px solid var(--border)}
+.b-carry{background:var(--red-d);color:#fca5a5;border:1px solid rgba(220,38,38,0.25)}
+.tx-list{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.tx-row{display:flex;justify-content:space-between;font-size:11px;padding:3px 0;color:var(--text3)}
+.tx-row span:last-child{color:var(--blue-l);font-weight:600}
+.tx-total{display:flex;justify-content:space-between;font-size:12px;padding:5px 0 0;border-top:1px solid var(--border);margin-top:3px}
+.tx-total span:first-child{color:var(--text2);font-weight:600}.tx-total span:last-child{color:#fff;font-weight:700}
+/* COLLECT PARTS */
+.coll-parts{margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.coll-part-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:3px 0;color:var(--text3)}
+.coll-part-row span:last-child{font-weight:600;color:var(--green-l)}
+.btn{border:none;border-radius:var(--rs);padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;transition:opacity .15s,transform .1s;white-space:nowrap}
+.btn:active{transform:scale(.96);opacity:.85}
+.btn-blue{background:var(--blue);color:#fff}.btn-green{background:var(--green);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-done{background:var(--surface2);color:var(--text3);cursor:default;border:1px solid var(--border)}
+.btn-done:active{transform:none;opacity:1}
+.btn-full{width:100%;padding:13px;font-size:15px;border-radius:var(--r)}
+.btn-cancel{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.btn-row{display:flex;gap:10px}
+.del-btn{background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.25);color:#fca5a5;border-radius:var(--rs);padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif}
+.edit-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:var(--rs);padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif}
+.log-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.log-name{font-size:13px;font-weight:600;color:var(--text)}.log-detail{font-size:11px;color:var(--text3);margin-top:2px}
+.rep-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;border-bottom:1px solid var(--border)}
+.rep-row:last-child{border-bottom:none}.rep-lbl{color:var(--text3)}.rep-val{font-weight:600;color:var(--text)}
+.fab{position:sticky;bottom:16px;display:flex;justify-content:flex-end;margin-top:12px}
+.fab-btn{background:var(--blue);color:#fff;border:none;border-radius:50px;padding:12px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;box-shadow:0 4px 20px rgba(37,99,235,.4);transition:transform .1s}
+.fab-btn:active{transform:scale(.95)}
+.empty{text-align:center;padding:32px 20px;color:var(--text3);font-size:13px}
+/* SETUP */
+#setup{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px}
+.setup-logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#0d2151,#1a4080);border:1px solid rgba(37,99,235,.4);display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 8px 32px rgba(37,99,235,.3)}
+.setup-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px;text-align:center}
+.setup-sub{font-size:14px;color:var(--text3);margin-bottom:32px;text-align:center;line-height:1.6;max-width:300px}
+.big-input-wrap{width:100%;max-width:320px;margin-bottom:8px;position:relative}
+.big-input{width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:16px 60px 16px 18px;font-size:26px;font-weight:700;color:var(--text);text-align:center;font-family:'Cairo',sans-serif}
+.big-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-d)}
+.big-unit{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text3);font-weight:500}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:24px 24px 0 0;padding:24px 20px;width:100%;max-width:480px;border-top:1px solid var(--border2);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);padding-bottom:calc(24px + var(--sb));max-height:92dvh;overflow-y:auto}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px}
+.modal-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--text3);margin-bottom:18px;line-height:1.5}
+.f-lbl{font-size:12px;color:var(--text3);margin-bottom:6px;display:block;font-weight:500}
+.f-in{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;font-size:15px;color:var(--text);margin-bottom:12px;font-family:'Cairo',sans-serif}
+.f-in:focus{outline:none;border-color:var(--blue)}
+.info-box{background:var(--amber-d);border:1px solid rgba(217,119,6,.2);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:#fcd34d;margin-bottom:14px}
+.carry-banner{background:var(--red-d);border:1px solid rgba(220,38,38,.25);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:12px;line-height:1.5}
+/* METHOD BUTTONS */
+.meth-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.meth-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:10px 8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Cairo',sans-serif;color:var(--text2);transition:all .15s;text-align:center}
+.meth-btn.meth-active{background:var(--green-d);border-color:rgba(5,150,105,.5);color:var(--green-l);font-weight:600}
+.meth-btn:active{transform:scale(.96)}
+/* COLLECT PARTS IN MODAL */
+.part-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;background:var(--surface2);border-radius:var(--rs);padding:8px 10px}
+.part-meth-sel{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:8px;font-size:13px;color:var(--text);font-family:'Cairo',sans-serif}
+.part-amt-in{width:90px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:8px;font-size:13px;color:var(--text);font-family:'Cairo',sans-serif;text-align:center}
+.part-del{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:4px}
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.cal-hdr{font-size:10px;color:var(--text3);text-align:center;padding:4px 0;font-weight:600}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:var(--text2);border-radius:var(--rs);cursor:pointer;position:relative;transition:background .15s}
+.cal-day:hover{background:var(--surface2)}
+.cal-day.has-data{color:var(--blue-l);font-weight:700}
+.cal-day.has-data::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--blue-l)}
+.cal-day.today{background:var(--blue-d);color:#fff;border:1px solid rgba(37,99,235,.4)}
+.cal-day.today.has-data::after{background:#fff}
+.cal-day.selected{background:var(--blue);color:#fff}
+.cal-day.empty-day{pointer-events:none;opacity:0}
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-nav-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text2);border-radius:var(--rs);padding:6px 14px;font-size:13px;cursor:pointer;font-family:'Cairo',sans-serif}
+.cal-month{font-size:15px;font-weight:700;color:var(--text)}
+/* IMPORT */
+.import-zone{border:2px dashed var(--border2);border-radius:var(--r);padding:24px;text-align:center;margin-bottom:14px;cursor:pointer;transition:border-color .2s}
+.import-zone:hover,.import-zone.drag{border-color:var(--blue-l);background:var(--blue-d)}
+.import-zone p{font-size:13px;color:var(--text3);margin-top:8px}
+.import-preview{background:var(--surface2);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:12px;max-height:160px;overflow-y:auto}
+.import-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.import-row:last-child{border-bottom:none}
+.imp-new{color:#fbbf24}.imp-exist{color:var(--green-l)}
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <div class="setup-logo"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4090e0" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+  <div class="setup-title">تحصيل — الأهلي</div>
+  <div class="setup-sub">أدخل الرصيد المتاح في الحساب دلوقتي عشان تبدأ اليوم</div>
+  <div id="carry-notice" style="display:none;background:var(--red-d);border:1px solid rgba(220,38,38,.3);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:16px;max-width:320px;text-align:right;line-height:1.6"></div>
+  <div class="big-input-wrap">
+    <input type="number" class="big-input" id="setup-input" placeholder="0" inputmode="numeric">
+    <span class="big-unit">ج</span>
+  </div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:24px;text-align:center">مثلاً لو الرصيد 133,000 اكتب 133000</div>
+  <button class="btn btn-blue btn-full" style="max-width:320px" onclick="startDay()">ابدأ اليوم</button>
+</div>
+
+<div id="app" style="display:none">
+  <div class="statusbar">
+    <div class="sb-title">تحصيل — الأهلي</div>
+    <div class="sb-date" id="app-date"></div>
+    <div class="sb-badge" id="app-pct">0%</div>
+  </div>
+  <div class="nav">
+    <div class="nav-tab" onclick="switchTab('home',this)">الرئيسية</div>
+    <div class="nav-tab active" onclick="switchTab('transfer',this)">التحويل</div>
+    <div class="nav-tab" onclick="switchTab('collect',this)">التحصيل</div>
+
+    <div class="nav-tab" onclick="switchTab('report',this)">التقرير</div>
+  </div>
+  <div class="screens">
+
+    <!-- HOME -->
+    <div class="screen" id="screen-home">
+      <div class="bal-card">
+        <button class="bal-btn" onclick="openModal('newday-modal')">يوم جديد</button>
+        <div class="bal-lbl">رصيد الماستر</div>
+        <div class="bal-amt"><span>ج</span><span id="h-bal">0</span></div>
+        <div class="bal-sub">رصيد أول اليوم: <span id="h-open">0</span> ج</div>
+        <div class="prog-wrap"><div class="prog-bar" id="h-prog" style="width:0%"></div></div>
+        <div style="font-size:10px;color:#7098c0;margin-top:5px">نسبة التحصيل: <span id="h-pct">0%</span></div>
+      </div>
+      <div id="home-carry" style="display:none" class="carry-banner"></div>
+      <div class="grid2">
+        <div class="metric"><div class="m-lbl">محوَّل اليوم</div><div class="m-val c-blue"><span id="h-sent">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">محصَّل اليوم</div><div class="m-val c-green"><span id="h-coll">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">متبقي للتحصيل</div><div class="m-val c-amber"><span id="h-rem">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">💵 نقدي في إيدك</div><div class="m-val" style="color:#fbbf24"><span id="h-cash">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">📲 فودافون في إيدك</div><div class="m-val" style="color:#22d3ee"><span id="h-vod">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">💳 انستاباي في إيدك</div><div class="m-val" style="color:#a78bfa"><span id="h-inst">0</span><span class="m-unit"> ج</span></div></div>
+      </div>
+      <div class="sec-title">آخر العمليات</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:6px 14px" id="h-recent"><div class="empty">لا يوجد عمليات بعد</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">
+        <button class="btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:10px" onclick="exportMerchants()">📦 تصدير التجار</button>
+        <button class="btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:12px;padding:10px" onclick="importMerchantsPrompt()">📲 استيراد التجار</button>
+      </div>
+    </div>
+
+    <!-- TRANSFER -->
+    <div class="screen active" id="screen-transfer">
+      <div class="bal-card">
+        <button class="bal-btn" onclick="openModal('newday-modal')">يوم جديد</button>
+        <div class="bal-lbl">رصيد متاح للتحويل</div>
+        <div class="bal-amt"><span>ج</span><span id="t-bal">0</span></div>
+        <div class="bal-sub">محوَّل اليوم: <span id="t-sent">0</span> ج في <span id="t-txc">0</span> عملية</div>
+      </div>
+      <div id="carry-transfer" style="display:none" class="carry-banner"></div>
+      <div class="search-wrap">
+        <input class="search-input" id="search-transfer" placeholder="ابحث بالاسم أو الماكينة أو الفون أو العنوان..." oninput="handleSearch('transfer')" autocomplete="off">
+        <span class="search-icon">🔍</span>
+        <button class="search-clear" id="clear-transfer" onclick="clearSearch('transfer')">✕</button>
+      </div>
+      <div class="sec-title">التجار</div>
+      <div id="transfer-list"></div>
+      <div class="fab" style="gap:8px">
+        <button class="fab-btn" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2)" onclick="openModal('import-modal')">📥 رفع شيت</button>
+        <button class="fab-btn" style="background:#854F0B;box-shadow:0 4px 20px rgba(133,79,11,.4)" onclick="openPayout()">💸 صرف نقدي</button>
+        <button class="fab-btn" onclick="openAddMerchant()">＋ تاجر</button>
+      </div>
+    </div>
+
+    <!-- COLLECT -->
+    <div class="screen" id="screen-collect">
+      <div class="grid2">
+        <div class="metric"><div class="m-lbl">إجمالي محوَّل</div><div class="m-val c-blue"><span id="c-sent">0</span><span class="m-unit"> ج</span></div></div>
+        <div class="metric"><div class="m-lbl">إجمالي محصَّل</div><div class="m-val c-green"><span id="c-coll">0</span><span class="m-unit"> ج</span></div></div>
+      </div>
+      <!-- ملخص تفصيلي بالطرق -->
+      <div id="c-methods-summary" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;display:none">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">تفصيل طرق التحصيل</div>
+        <div style="display:flex;gap:12px;font-size:10px;margin-bottom:6px">
+          <span style="color:#60a5fa">🔵 وصل الماستر</span>
+          <span style="color:#fbbf24">🟡 في إيدك</span>
+          <span style="color:#f87171">🔴 صرفت</span>
+        </div>
+        <div id="c-methods-rows"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+        <div class="search-wrap" style="flex:1;margin-bottom:0">
+          <input class="search-input" id="search-collect" placeholder="ابحث عن تاجر..." oninput="handleSearch('collect')" autocomplete="off">
+          <span class="search-icon">🔍</span>
+          <button class="search-clear" id="clear-collect" onclick="clearSearch('collect')">✕</button>
+        </div>
+        <select id="collect-sort" onchange="renderCollect()" style="background:var(--surface);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 10px;font-size:12px;color:var(--text2);font-family:'Cairo',sans-serif;flex-shrink:0">
+          <option value="default">ترتيب عادي</option>
+          <option value="area">حسب المنطقة</option>
+          <option value="pending">المتبقي أولاً</option>
+          <option value="done">تم التحصيل أولاً</option>
+        </select>
+      </div>
+      <div class="sec-title">التجار — جمَّع منهم</div>
+      <div id="collect-list"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="screen" id="screen-history">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calPrev()">→</button>
+        <div class="cal-month" id="cal-month-lbl"></div>
+        <button class="cal-nav-btn" onclick="calNext()">←</button>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:14px">
+        <div class="cal-grid" id="cal-headers"></div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+      <div class="sec-title" id="hist-sec-title">اختر يوم من الكالندر</div>
+      <div id="hist-content"><div class="empty">اضغط على يوم عشان تشوف بياناته</div></div>
+    </div>
+
+    <!-- REPORT -->
+    <div class="screen" id="screen-report">
+      <div class="sec-title">تقرير اليوم الحالي</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div class="rep-row"><span class="rep-lbl">التاريخ</span><span class="rep-val" id="rep-date">—</span></div>
+        <div class="rep-row"><span class="rep-lbl">رصيد أول اليوم</span><span class="rep-val" id="rep-open">—</span></div>
+        <div class="rep-row"><span class="rep-lbl">إجمالي محوَّل</span><span class="rep-val c-blue" id="rep-sent">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">إجمالي محصَّل</span><span class="rep-val c-green" id="rep-coll">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">منه وصل الماستر مباشرة</span><span class="rep-val c-blue" id="rep-master-coll">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">💵 نقدي في إيدك</span><span class="rep-val" style="color:#fbbf24" id="rep-hand-coll">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">📲 فودافون في إيدك</span><span class="rep-val" style="color:#22d3ee" id="rep-vod-coll">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">💳 انستاباي في إيدك</span><span class="rep-val" style="color:#a78bfa" id="rep-inst-coll">0 ج</span></div>
+        <div class="rep-row"><span class="rep-lbl">رصيد الماستر الآن</span><span class="rep-val" id="rep-bal">—</span></div>
+        <div class="rep-row"><span class="rep-lbl">متبقي للتحصيل</span><span class="rep-val c-amber" id="rep-rem">0 ج</span></div>
+      </div>
+      <div class="sec-title">تفاصيل التجار</div>
+      <div id="rep-details"></div>
+      <button class="btn btn-blue btn-full" style="margin-top:8px" onclick="shareReport()">📤 مشاركة على واتساب</button>
+      <button class="btn btn-full" style="margin-top:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text2)" onclick="copyReport()">📋 نسخ التقرير</button>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- Transfer Modal -->
+<div class="modal-overlay" id="transfer-modal" onclick="overlayClose(event,'transfer-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="tm-title">تحويل لـ: —</div>
+    <div class="modal-sub" id="tm-sub">—</div>
+    <div id="tm-prev"></div>
+    <label class="f-lbl">مبلغ التحويل (جنيه)</label>
+    <input type="number" class="f-in" id="tm-amt" placeholder="أدخل المبلغ" inputmode="numeric">
+    <label class="f-lbl">رقم المرجع (اختياري)</label>
+    <input type="text" class="f-in" id="tm-ref" placeholder="رقم العملية من البنك">
+    <div class="info-box">رصيد متاح: <strong id="tm-avail">0</strong> ج</div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('transfer-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2" onclick="confirmTransfer()">تأكيد التحويل</button>
+    </div>
+  </div>
+</div>
+
+<!-- Collect Modal — multi-method -->
+<div class="modal-overlay" id="collect-modal" onclick="overlayClose(event,'collect-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="cm-title">تحصيل من: —</div>
+    <div class="modal-sub" id="cm-sub">—</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:8px 14px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between;align-items:center">
+      <span style="color:var(--text3)">💵 نقدي متاح للصرف</span>
+      <span style="color:#fbbf24;font-weight:700" id="cm-cash-avail">0 ج</span>
+    </div>
+    <label class="f-lbl">أجزاء التحصيل — اللي جالك</label>
+    <div id="cm-parts"></div>
+    <button class="btn btn-cancel" style="width:100%;margin-bottom:12px;font-size:12px" onclick="addCollectPart()">＋ إضافة جزء تاني</button>
+    <div style="background:var(--surface2);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:12px">
+      <div style="display:flex;justify-content:space-between;padding:3px 0">
+        <span style="color:var(--text3)">وصل الماستر مباشرة</span>
+        <span style="color:#60a5fa;font-weight:600" id="cm-master">0 ج</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0">
+        <span style="color:var(--text3)">💵 نقدي في إيدك</span>
+        <span style="color:#fbbf24;font-weight:600" id="cm-cash">0 ج</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0">
+        <span style="color:var(--text3)">📲 فودافون في إيدك</span>
+        <span style="color:#22d3ee;font-weight:600" id="cm-vod">0 ج</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0">
+        <span style="color:var(--text3)">💳 انستاباي في إيدك</span>
+        <span style="color:#a78bfa;font-weight:600" id="cm-inst">0 ج</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0">
+        <span style="color:var(--text3)">صرفت نقدي للتاجر</span>
+        <span style="color:#f87171;font-weight:600" id="cm-out">0 ج</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0 0;border-top:1px solid var(--border);margin-top:4px">
+        <span style="color:var(--text2);font-weight:600">صافي التحصيل</span>
+        <span style="color:var(--green-l);font-weight:700;font-size:14px" id="cm-total">0 ج</span>
+      </div>
+    </div>
+    <label class="f-lbl">ملاحظة (اختياري)</label>
+    <input type="text" class="f-in" id="cm-note" placeholder="جزئي، رفض، غائب...">
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('collect-modal')">إلغاء</button>
+      <button class="btn btn-green" style="flex:2" onclick="confirmCollect()">تأكيد التحصيل</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Merchant Modal -->
+<div class="modal-overlay" id="add-modal" onclick="overlayClose(event,'add-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="add-modal-title">إضافة تاجر</div>
+    <div class="modal-sub" id="add-modal-sub">أضف تاجر جديد للقائمة</div>
+    <label class="f-lbl">اسم التاجر *</label>
+    <input type="text" class="f-in" id="add-name" placeholder="اسم المحل أو التاجر">
+    <label class="f-lbl">رقم الماكينة</label>
+    <input type="text" class="f-in" id="add-machine" placeholder="مثلاً: 1042">
+    <label class="f-lbl">رقم الفون</label>
+    <input type="tel" class="f-in" id="add-phone" placeholder="01xxxxxxxxx" inputmode="numeric">
+    <label class="f-lbl">العنوان</label>
+    <input type="text" class="f-in" id="add-address" placeholder="الشارع والمنطقة">
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('add-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2" onclick="confirmAdd()">حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Collect Modal -->
+<div class="modal-overlay" id="del-collect-modal" onclick="overlayClose(event,'del-collect-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">حذف التحصيلة</div>
+    <div class="modal-sub" id="del-collect-sub">هتحذف التحصيلة — الفلوس هترجع للحساب.</div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('del-collect-modal')">إلغاء</button>
+      <button class="btn btn-red" style="flex:2" id="del-collect-confirm-btn">حذف التحصيلة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="delete-modal" onclick="overlayClose(event,'delete-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">حذف التاجر</div>
+    <div class="modal-sub" id="del-sub">هتحذف التاجر نهائياً؟</div>
+    <div style="background:var(--red-d);border:1px solid rgba(220,38,38,.2);border-radius:var(--rs);padding:10px 14px;font-size:12px;color:#fca5a5;margin-bottom:14px">⚠️ لو فيه تحويلات مسجلة، الأرقام هترجع للحساب تلقائي.</div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('delete-modal')">إلغاء</button>
+      <button class="btn btn-red" style="flex:2" onclick="confirmDelete()">حذف نهائي</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import Sheet Modal -->
+<div class="modal-overlay" id="import-modal" onclick="overlayClose(event,'import-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">رفع شيت التحويلات</div>
+    <div class="modal-sub">ارفع ملف CSV أو Excel فيه أعمدة: اسم التاجر، المبلغ. ممكن كمان: رقم الماكينة، الفون، العنوان</div>
+    <div class="import-zone" id="import-zone" onclick="document.getElementById('file-input').click()">
+      <div style="font-size:32px">📄</div>
+      <p>اضغط لاختيار ملف CSV أو Excel</p>
+      <p style="font-size:11px;margin-top:4px;color:var(--text3)">.csv أو .xlsx أو .xls</p>
+    </div>
+    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" style="display:none" onchange="handleFile(this)">
+    <div id="import-preview" style="display:none">
+      <div class="import-preview" id="import-rows"></div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:12px" id="import-summary"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('import-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2;display:none" id="import-confirm-btn" onclick="confirmImport()">استيراد</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payout Modal — صرف نقدي لتاجر ويرجعلك -->
+<div class="modal-overlay" id="payout-modal" onclick="overlayClose(event,'payout-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">صرف نقدي لتاجر</div>
+    <div class="modal-sub">ادفع نقدي للتاجر وهو يرجعهالك بأي طريقة</div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:8px 14px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between">
+      <span style="color:var(--text3)">💵 نقدي متاح في إيدك</span>
+      <span style="color:#fbbf24;font-weight:700" id="payout-avail">0 ج</span>
+    </div>
+    <label class="f-lbl">اختر تاجر أو اكتب اسم</label>
+    <select class="f-in" id="payout-name-sel" style="margin-bottom:8px" onchange="onPayoutSelChange()">
+      <option value="">— اختر تاجر من القائمة —</option>
+    </select>
+    <input type="text" class="f-in" id="payout-name-manual" placeholder="أو اكتب اسم تاجر مش في القائمة..." style="display:none">
+    <label class="f-lbl">المبلغ اللي صرفته نقدي (جنيه)</label>
+    <input type="number" class="f-in" id="payout-amt" placeholder="0" inputmode="numeric" oninput="updatePayoutReturn()">
+    <label class="f-lbl">هو رجعهالك إزاي؟</label>
+    <div class="meth-grid" style="margin-bottom:12px">
+      <button class="meth-btn payout-ret-btn meth-active" data-meth="return_machine" onclick="selPayoutRet(this)">🔄 ماستر مباشرة</button>
+      <button class="meth-btn payout-ret-btn" data-meth="vodafone_master" onclick="selPayoutRet(this)">📱 فودافون كاش ماستر</button>
+      <button class="meth-btn payout-ret-btn" data-meth="cash" onclick="selPayoutRet(this)">💵 نقدي في إيدي</button>
+      <button class="meth-btn payout-ret-btn" data-meth="vodafone_hand" onclick="selPayoutRet(this)">📲 فودافون في إيدي</button>
+      <button class="meth-btn payout-ret-btn" data-meth="instapay_hand" onclick="selPayoutRet(this)">💳 انستاباي في إيدي</button>
+    </div>
+    <label class="f-lbl">المبلغ اللي رجعلك (جنيه)</label>
+    <input type="number" class="f-in" id="payout-return-amt" placeholder="0" inputmode="numeric">
+    <div style="background:var(--surface2);border-radius:var(--rs);padding:8px 14px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between">
+      <span style="color:var(--text3)">صافي على إيدك</span>
+      <span style="color:var(--green-l);font-weight:700" id="payout-net">0 ج</span>
+    </div>
+    <label class="f-lbl">ملاحظة (اختياري)</label>
+    <input type="text" class="f-in" id="payout-note" placeholder="">
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('payout-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2" onclick="confirmPayout()">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Day Modal -->
+<div class="modal-overlay" id="newday-modal" onclick="overlayClose(event,'newday-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">بدء يوم جديد</div>
+    <div class="modal-sub">بيانات اليوم هتتحفظ في السجل — التجار اللي عندهم متبقي هيجوا معاك لليوم الجديد.</div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('newday-modal')">إلغاء</button>
+      <button class="btn btn-red" style="flex:2" onclick="resetDay()">ابدأ يوم جديد</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deposit Modal -->
+<div class="modal-overlay" id="deposit-modal" onclick="overlayClose(event,'deposit-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="dep-modal-title">إضافة توريد</div>
+    <div class="modal-sub" id="dep-modal-sub">لما بتودّع الفلوس اللي في إيدك للبنك — سجّلها هنا وهتزيد في رصيد الماستر</div>
+    <div class="info-box" id="dep-avail-box" style="background:var(--green-d);border-color:rgba(5,150,105,.3);color:var(--green-l)">نقدي في إيدك متاح للتوريد: <strong id="dep-avail-modal">0</strong> ج</div>
+    <label class="f-lbl">من مين؟</label>
+    <select class="f-in" id="dep-source" style="margin-bottom:12px">
+      <option value="">— اختر تاجر أو أكتب اسم —</option>
+    </select>
+    <input type="text" class="f-in" id="dep-source-manual" placeholder="أو اكتب اسم مصدر تاني..." style="margin-top:-4px">
+    <label class="f-lbl">طريقة الاستلام</label>
+    <div class="meth-grid" style="margin-bottom:12px">
+      <button class="meth-btn dep-meth-btn meth-active" data-meth="cash" onclick="selDepMeth(this)">💵 نقدي</button>
+      <button class="meth-btn dep-meth-btn" data-meth="vodafone_hand" onclick="selDepMeth(this)">📲 فودافون في إيدي</button>
+      <button class="meth-btn dep-meth-btn" data-meth="instapay_hand" onclick="selDepMeth(this)">💳 انستاباي في إيدي</button>
+    </div>
+    <label class="f-lbl">المبلغ (جنيه)</label>
+    <input type="number" class="f-in" id="dep-amt" placeholder="أدخل المبلغ" inputmode="numeric">
+    <label class="f-lbl">ملاحظة (اختياري)</label>
+    <input type="text" class="f-in" id="dep-note" placeholder="أي تفاصيل إضافية...">
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('deposit-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2" onclick="confirmDeposit()">تأكيد التوريد</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import Data Modal -->
+<div class="modal-overlay" id="import-data-modal" onclick="overlayClose(event,'import-data-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">استيراد بيانات</div>
+    <div class="modal-sub">الصق الكود اللي صدّرته من التطبيق القديم هنا</div>
+    <textarea id="import-data-txt" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rs);padding:11px 14px;font-size:12px;color:var(--text);font-family:monospace;height:120px;margin-bottom:12px;resize:none" placeholder="الصق الكود هنا..."></textarea>
+    <div id="import-data-msg" style="font-size:12px;margin-bottom:12px;display:none"></div>
+    <div class="btn-row">
+      <button class="btn btn-cancel" style="flex:1" onclick="closeModal('import-data-modal')">إلغاء</button>
+      <button class="btn btn-blue" style="flex:2" onclick="importBackupData()">استيراد</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const fmt = n => Math.round(Number(n)).toLocaleString('en-US');
+const nowTime = () => { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); };
+const todayKey = () => { const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const avC = ['av0','av1','av2'];
+const ini = n => n.trim().split(' ').slice(0,2).map(w=>w[0]).join('');
+// وصل للماستر مباشرة → بيزيد رصيد الماستر
+const METHS_MASTER = ['return_machine','vodafone_master'];
+// في إيدك → نقدي + فودافون موبايلك + انستا موبايلك (لازم تورده)
+const METHS_HAND   = ['cash','vodafone_hand','instapay_hand']; // كلهم "في إيدك" بس كل واحد رصيد منفصل
+const METHS_CASH   = ['cash'];
+const METHS_VOD    = ['vodafone_hand'];
+const METHS_INST   = ['instapay_hand'];
+// صرفت نقدي للتاجر → بينقص من النقدي في إيدك
+const METHS_OUT    = ['paid_cash'];
+
+const METHS = {
+  return_machine  : '🔄 مرتجع ماكينة على الماستر',
+  vodafone_master : '📱 فودافون كاش على الماستر',
+  cash            : '💵 نقدي في إيدي',
+  vodafone_hand   : '📲 فودافون كاش في إيدي',
+  instapay_hand   : '💳 انستاباي في إيدي',
+  paid_cash       : '💸 صرفت نقدي للتاجر'
+};
+const STORE='tahseel_v5', HIST='tahseel_hist_v5';
+
+let S={balance:0,opening:0,merchants:[],logs:[],mid:1,date:''};
+let H={};
+let deleteId=null, editMerchantId=null;
+let importData=[];
+
+// ===== STORAGE =====
+function saveLS(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function loadLS(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function saveSS(k,v){try{sessionStorage.setItem(k,v);}catch(e){}}
+function loadSS(k){try{return sessionStorage.getItem(k);}catch(e){return null;}}
+function saveCK(k,v){try{if(v.length<3800){const e=new Date(Date.now()+365*864e5).toUTCString();document.cookie=k+'='+encodeURIComponent(v)+'; expires='+e+'; path=/; SameSite=Strict';}}catch(e){}}
+function loadCK(k){try{const m=document.cookie.match(new RegExp('(?:^|; )'+k+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}catch(e){return null;}}
+let idb=null;
+function openIDB(){return new Promise(res=>{try{const r=indexedDB.open('tahseel_db',1);r.onupgradeneeded=e=>e.target.result.createObjectStore('d');r.onsuccess=e=>{idb=e.target.result;res(true);};r.onerror=()=>res(false);}catch(e){res(false);}});}
+function saveIDB(k,v){if(!idb)return;try{idb.transaction('d','readwrite').objectStore('d').put(v,k);}catch(e){}}
+function loadIDB(k){return new Promise(res=>{if(!idb){res(null);return;}try{const r=idb.transaction('d','readonly').objectStore('d').get(k);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null);}catch(e){res(null);}});}
+function save(){const sj=JSON.stringify(S),hj=JSON.stringify(H);saveLS(STORE,sj);saveSS(STORE,sj);saveCK(STORE,sj);saveIDB(STORE,sj);saveLS(HIST,hj);saveSS(HIST,hj);saveIDB(HIST,hj);}
+async function loadAll(){await openIDB();const sR=loadLS(STORE)||loadSS(STORE)||loadCK(STORE)||await loadIDB(STORE);if(sR)try{S=JSON.parse(sR);}catch(e){}const hR=loadLS(HIST)||loadSS(HIST)||await loadIDB(HIST);if(hR)try{H=JSON.parse(hR);}catch(e){};}
+setInterval(save,5000);
+window.addEventListener('visibilitychange',save);
+window.addEventListener('pagehide',save);
+window.addEventListener('beforeunload',save);
+loadAll().then(initApp);
+
+// ===== INIT =====
+function getCarryOver(){return S.merchants.filter(m=>m.totalSent>m.totalCollected&&m.totalSent>0);}
+
+function initApp(){
+  if(S.opening>0&&S.date===todayKey()){
+    document.getElementById('setup').style.display='none';
+    document.getElementById('app').style.display='flex';
+    setDate();renderAll();updateStats();showCarryBanners();
+  } else if(S.opening>0&&S.date&&S.date!==todayKey()){
+    if(S.logs.length>0) H[S.date]=JSON.parse(JSON.stringify(S));
+    save();
+    showCarryNotice();
+  } else { showCarryNotice(); }
+}
+
+function showCarryNotice(){
+  const carry=getCarryOver();
+  if(carry.length>0){const tot=carry.reduce((s,m)=>s+(m.totalSent-m.totalCollected),0);document.getElementById('carry-notice').style.display='block';document.getElementById('carry-notice').innerHTML=`⚠️ فيه ${carry.length} تاجر من اليوم السابق عندهم متبقي <strong>${fmt(tot)}</strong> ج — هيجوا معاك في اليوم الجديد.`;}
+}
+
+function startDay(){
+  const v=parseFloat(document.getElementById('setup-input').value)||0;
+  if(!v){alert('أدخل الرصيد أولاً');return;}
+  if(S.date&&S.logs.length>0) H[S.date]=JSON.parse(JSON.stringify(S));
+  const newM=S.merchants.map(m=>{const u=m.totalSent-m.totalCollected;return{...m,totalSent:u>0?u:0,totalCollected:0,collectParts:[],transfers:u>0?[{amount:u,time:'00:00',ref:'ترحيل'}]:[],collectStatus:u>0?'carry':'notsent'};});
+  S={balance:v,opening:v,merchants:newM,logs:[],mid:S.mid,date:todayKey()};
+  // balance = opening - transfers + deposits (يتحسب في updateStats)
+  save();
+  document.getElementById('setup').style.display='none';
+  document.getElementById('carry-notice').style.display='none';
+  document.getElementById('app').style.display='flex';
+  setDate();renderAll();updateStats();showCarryBanners();
+}
+
+function resetDay(){
+  closeModal('newday-modal');
+  if(S.date&&S.logs.length>0) H[S.date]=JSON.parse(JSON.stringify(S));
+  save();
+  document.getElementById('app').style.display='none';
+  document.getElementById('setup').style.display='flex';
+  document.getElementById('setup-input').value='';
+  showCarryNotice();
+}
+
+function showCarryBanners(){
+  const carry=S.merchants.filter(m=>m.collectStatus==='carry');
+  const tot=carry.reduce((s,m)=>s+m.totalSent,0);
+  const msg=carry.length>0?`⚠️ ${carry.length} تاجر مرحَّل — متبقي لهم <strong>${fmt(tot)}</strong> ج`:'';
+  ['home-carry','carry-transfer'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.display=carry.length>0?'block':'none';el.innerHTML=msg;}});
+}
+
+function setDate(){
+  if(!S.date) S.date=todayKey();
+  const p=S.date.split('-');const d=new Date(p[0],p[1]-1,p[2]);
+  document.getElementById('app-date').textContent=d.toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'short'});
+  document.getElementById('rep-date').textContent=d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+}
+
+function totalSent(){return S.merchants.reduce((s,m)=>s+m.totalSent,0);}
+function totalColl(){return S.merchants.reduce((s,m)=>s+m.totalCollected,0);}
+// الفلوس النقدي فقط اللي في إيدك — بس طريقة cash
+function totalByMeth(meths){
+  return S.merchants.reduce((s,m)=>{
+    return s+(m.collectParts||[]).filter(p=>meths.includes(p.meth)).reduce((ss,p)=>ss+(p.amt||0),0);
+  },0);
+}
+function totalCashColl(){
+  // نقدي من تحصيلات - صرفت في تحصيلات - صرفت في payouts + رجعلك نقدي من payouts
+  const cashFromCollect = totalByMeth(METHS_CASH) - totalByMeth(METHS_OUT);
+  const cashPaidInPayouts = S.logs.filter(l=>l.type==='payout').reduce((s,l)=>s+l.paidAmt,0);
+  const cashReturnedFromPayouts = S.logs.filter(l=>l.type==='payout'&&l.retMeth==='cash').reduce((s,l)=>s+l.retAmt,0);
+  return cashFromCollect - cashPaidInPayouts + cashReturnedFromPayouts;
+}
+function totalVodColl(){
+  const fromCollect=totalByMeth(METHS_VOD);
+  const fromPayouts=S.logs.filter(l=>l.type==='payout'&&l.retMeth==='vodafone_hand').reduce((s,l)=>s+l.retAmt,0);
+  return fromCollect+fromPayouts;
+}
+function totalInstColl(){
+  const fromCollect=totalByMeth(METHS_INST);
+  const fromPayouts=S.logs.filter(l=>l.type==='payout'&&l.retMeth==='instapay_hand').reduce((s,l)=>s+l.retAmt,0);
+  return fromCollect+fromPayouts;
+}
+function totalHandColl(){ return totalCashColl()+totalVodColl()+totalInstColl(); }
+function totalTx(){return S.logs.filter(l=>l.type==='transfer').length;}
+
+function updateStats(){
+  const sent=totalSent(),coll=totalColl(),rem=sent-coll,txc=totalTx();
+  // رصيد الماستر = أول اليوم - تحويلات + وصل الماستر مباشرة فقط + توريدات
+  const totalDeps=S.logs.filter(l=>l.type==='deposit').reduce((s,l)=>s+l.amount,0);
+  const masterFromCollect=S.merchants.reduce((s,m)=>{
+    return s+(m.collectParts||[]).filter(p=>METHS_MASTER.includes(p.meth)).reduce((ss,p)=>ss+(p.amt||0),0);
+  },0);
+  // اللي في إيدك (HAND) مش بيأثر على الماستر حتى تورده
+  const masterFromPayouts=S.logs.filter(l=>l.type==='payout'&&METHS_MASTER.includes(l.retMeth)).reduce((s,l)=>s+l.retAmt,0);
+  S.balance = S.opening - sent + masterFromCollect + masterFromPayouts + totalDeps;
+  const pct=sent>0?Math.round((coll/sent)*100):0;
+  const bf=fmt(S.balance);
+  document.getElementById('h-bal').textContent=bf;document.getElementById('h-open').textContent=fmt(S.opening);
+  document.getElementById('h-sent').textContent=fmt(sent);document.getElementById('h-coll').textContent=fmt(coll);
+  document.getElementById('h-rem').textContent=fmt(rem);
+  const cashInHand=totalCashColl();
+  const vodInHand=totalVodColl();
+  const instInHand=totalInstColl();
+  const hCash=document.getElementById('h-cash');if(hCash)hCash.textContent=fmt(cashInHand);
+  const hVodEl=document.getElementById('h-vod');if(hVodEl)hVodEl.textContent=fmt(vodInHand);
+  const hInstEl=document.getElementById('h-inst');if(hInstEl)hInstEl.textContent=fmt(instInHand);
+  document.getElementById('h-prog').style.width=pct+'%';document.getElementById('h-pct').textContent=pct+'%';
+  document.getElementById('app-pct').textContent=pct+'%';
+  document.getElementById('t-bal').textContent=bf;document.getElementById('t-sent').textContent=fmt(sent);document.getElementById('t-txc').textContent=txc;
+  document.getElementById('c-sent').textContent=fmt(sent);document.getElementById('c-coll').textContent=fmt(coll);
+  document.getElementById('rep-open').textContent=fmt(S.opening)+' ج';
+  document.getElementById('rep-sent').textContent=fmt(sent)+' ج';
+  document.getElementById('rep-coll').textContent=fmt(coll)+' ج';
+  const masterColl=masterFromCollect;
+  const repMC=document.getElementById('rep-master-coll');
+  const repHC=document.getElementById('rep-hand-coll');
+  const repVC=document.getElementById('rep-vod-coll');
+  const repIC=document.getElementById('rep-inst-coll');
+  if(repMC) repMC.textContent=fmt(masterColl)+' ج';
+  if(repHC) repHC.textContent=fmt(totalCashColl())+' ج';
+  if(repVC) repVC.textContent=fmt(totalVodColl())+' ج';
+  if(repIC) repIC.textContent=fmt(totalInstColl())+' ج';
+  document.getElementById('rep-bal').textContent=bf+' ج';
+  document.getElementById('rep-rem').textContent=fmt(rem)+' ج';
+  document.getElementById('tm-avail').textContent=bf;
+  updateMethodsSummary();
+
+}
+
+// ===== SEARCH =====
+let searchQ={transfer:'',collect:''};
+function matchQ(m,q){if(!q)return true;const s=q.toLowerCase();return[m.name,m.machine||'',m.phone||'',m.address||''].some(f=>f.toLowerCase().includes(s));}
+function hl(text,q){if(!q||!text)return text||'';const i=text.toLowerCase().indexOf(q.toLowerCase());if(i===-1)return text;return text.slice(0,i)+'<span class="hl">'+text.slice(i,i+q.length)+'</span>'+text.slice(i+q.length);}
+function handleSearch(tab){const q=document.getElementById('search-'+tab).value.trim();searchQ[tab]=q;document.getElementById('clear-'+tab).classList.toggle('show',q.length>0);tab==='transfer'?renderTransfer():renderCollect();}
+function clearSearch(tab){document.getElementById('search-'+tab).value='';searchQ[tab]='';document.getElementById('clear-'+tab).classList.remove('show');tab==='transfer'?renderTransfer():renderCollect();}
+
+// ===== RENDER =====
+function renderAll(){renderTransfer();renderCollect();renderHome();renderReport();renderCalendar();}
+
+function transferCard(m,i,q){
+  const hasTx=m.transfers.length>0;
+  const badge=hasTx?(m.collectStatus==='carry'?`<span class="badge b-carry">مرحَّل: ${fmt(m.totalSent)} ج</span>`:`<span class="badge b-done">${m.transfers.length} تحويل — ${fmt(m.totalSent)} ج</span>`):`<span class="badge b-none">لم يُحوَّل بعد</span>`;
+  const txRows=hasTx?`<div class="tx-list">${m.transfers.map(t=>`<div class="tx-row"><span>${t.time}${t.ref?' — '+t.ref:''}</span><span>${fmt(t.amount)} ج</span></div>`).join('')}<div class="tx-total"><span>الإجمالي</span><span>${fmt(m.totalSent)} ج</span></div></div>`:'';
+  const subParts=[m.machine?'ماكينة: '+m.machine:'',m.phone?'📞 '+m.phone:'',m.address?'📍 '+m.address:''].filter(Boolean).join(' · ');
+  return `<div class="card">
+    <div class="mrow">
+      <div class="av ${avC[i%3]}">${ini(m.name)}</div>
+      <div class="minfo"><div class="mname">${hl(m.name,q)}</div><div class="msub">${hl(subParts,q)||'—'}</div>${badge}</div>
+      <div style="display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end">
+        <button class="edit-btn" onclick="openEditMerchant(${m.id})">تعديل</button>
+        <button class="del-btn" onclick="openDelete(${m.id})">حذف</button>
+        <button class="btn btn-blue" onclick="openTransfer(${m.id})">تحويل</button>
+      </div>
+    </div>${txRows}</div>`;
+}
+
+function collectCard(m,i,q){
+  if(m.totalSent===0)return`<div class="card" style="opacity:.4"><div class="mrow"><div class="av ${avC[i%3]}">${ini(m.name)}</div><div class="minfo"><div class="mname">${hl(m.name,q)}</div><div class="msub">${m.machine||'—'}</div><span class="badge b-none">لم يُحوَّل بعد</span></div></div></div>`;
+  const st=m.collectStatus;
+  const parts=m.collectParts||[];
+  const partsSummary=parts.length>0?parts.map(p=>`${METHS[p.meth]||p.meth}: ${fmt(p.amt)} ج`).join(' + '):'';
+  const badge=st==='collected'?`<span class="badge b-done">✓ ${fmt(m.totalCollected)} ج${partsSummary?' — '+partsSummary:''}</span>`
+    :st==='partial'?`<span class="badge b-partial">جزئي ${fmt(m.totalCollected)}/${fmt(m.totalSent)} ج${partsSummary?' — '+partsSummary:''}</span>`
+    :st==='carry'?`<span class="badge b-carry">مرحَّل — متبقي: ${fmt(m.totalSent-m.totalCollected)} ج</span>`
+    :`<span class="badge b-pending">محوَّل: ${fmt(m.totalSent)} ج</span>`;
+  const remaining = m.totalSent - m.totalCollected;
+  const btnLbl = st==='collected' ? 'تعديل' : remaining>0 ? 'تحصيل' : 'إضافة';
+  const btnCls=st==='collected'?'btn-cancel':'btn-green';
+  const hasCollect = (st==='collected'||st==='partial') || (m.totalCollected>0 && (m.collectParts||[]).length>0);
+  const delBtn = hasCollect ? `<button class="del-btn" onclick="deleteCollect(${m.id})" style="margin-left:4px">حذف تحصيل</button>` : '';
+  return`<div class="card"><div class="mrow"><div class="av ${avC[i%3]}">${ini(m.name)}</div><div class="minfo"><div class="mname">${hl(m.name,q)}</div><div class="msub">${m.machine||'—'}</div>${badge}</div><div style="display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end">${delBtn}<button class="btn ${btnCls}" onclick="openCollect(${m.id})">${btnLbl}</button></div></div></div>`;
+}
+
+function renderTransfer(){const q=searchQ.transfer;const list=S.merchants.filter(m=>matchQ(m,q));document.getElementById('transfer-list').innerHTML=list.length?list.map((m,i)=>transferCard(m,i,q)).join(''):q?'<div class="empty">مفيش نتيجة</div>':'<div class="empty">لا يوجد تجار — أضف من الزر في الأسفل</div>';}
+function renderCollect(){
+  const q=searchQ.collect;
+  const sortEl=document.getElementById('collect-sort');
+  const sort=sortEl?sortEl.value:'default';
+  let list=S.merchants.filter(m=>m.totalSent>0&&matchQ(m,q));
+  // ترتيب
+  if(sort==='area'){
+    list=[...list].sort((a,b)=>{
+      const aArea=(a.address||'').split(/[\s،,]/)[0]||'';
+      const bArea=(b.address||'').split(/[\s،,]/)[0]||'';
+      return aArea.localeCompare(bArea,'ar');
+    });
+  } else if(sort==='pending'){
+    const order={carry:0,sent:1,partial:2,collected:3,notsent:4};
+    list=[...list].sort((a,b)=>(order[a.collectStatus]||0)-(order[b.collectStatus]||0));
+  } else if(sort==='done'){
+    const order={collected:0,partial:1,carry:2,sent:3,notsent:4};
+    list=[...list].sort((a,b)=>(order[a.collectStatus]||0)-(order[b.collectStatus]||0));
+  }
+  document.getElementById('collect-list').innerHTML=list.length?list.map((m,i)=>collectCard(m,i,q)).join(''):q?'<div class="empty">مفيش نتيجة</div>':'<div class="empty">لا يوجد تحويلات بعد</div>';
+  // حدّث ملخص الطرق
+  updateMethodsSummary();
+}
+
+function updateMethodsSummary(){
+  const totals={};
+  Object.keys(METHS).forEach(k=>totals[k]=0);
+  S.merchants.forEach(m=>{(m.collectParts||[]).forEach(p=>{if(totals[p.meth]!==undefined)totals[p.meth]+=p.amt||0;});});
+  const hasAny=Object.values(totals).some(v=>v>0);
+  const el=document.getElementById('c-methods-summary');
+  if(!el)return;
+  el.style.display=hasAny?'block':'none';
+  // paid_cash يظهر كخصم من النقدي
+  const cashIn   = totals['cash']||0;
+  const vodIn    = totals['vodafone_hand']||0;
+  const instIn   = totals['instapay_hand']||0;
+  const paidOut  = totals['paid_cash']||0;
+  const netCash  = cashIn - paidOut;
+
+  let rows = Object.entries(totals).filter(([k,v])=>v>0&&k!=='paid_cash').map(([k,v])=>{
+    const color=METHS_MASTER.includes(k)?'#60a5fa':k==='cash'?'#fbbf24':k==='vodafone_hand'?'#22d3ee':k==='instapay_hand'?'#a78bfa':'var(--green-l)';
+    return `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text2)">${METHS[k]||k}</span><span style="color:${color};font-weight:600">+${fmt(v)} ج</span></div>`;
+  });
+
+  if(paidOut>0){
+    rows.push(`<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--text2)">${METHS['paid_cash']}</span><span style="color:#f87171;font-weight:600">−${fmt(paidOut)} ج</span></div>`);
+    // net cash line
+    rows.push(`<div style="display:flex;justify-content:space-between;padding:5px 0 2px;font-size:13px"><span style="color:var(--text3);font-weight:600">💵 صافي نقدي في إيدك</span><span style="color:#fbbf24;font-weight:700">${fmt(netCash)} ج</span></div>`);
+  }
+
+  document.getElementById('c-methods-rows').innerHTML=rows.join('');
+}
+function renderHome(){document.getElementById('h-recent').innerHTML=S.logs.length?S.logs.slice(0,5).map(l=>{
+    const dotColor=l.type==='transfer'?'#3b82f6':l.type==='deposit'?'#fbbf24':'#10b981';
+    const amtColor=l.type==='transfer'?'#f87171':l.type==='deposit'?'#fbbf24':'#6ee7b7';
+    const prefix=l.type==='transfer'?'−':'+';
+    const lbl=l.type==='transfer'?'تحويل':l.type==='deposit'?'توريد — '+(l.method||''):l.type==='payout'?'صرف نقدي — '+l.name:'تحصيل';
+    return`<div class="log-item"><div class="log-dot" style="background:${dotColor}"></div><div style="flex:1"><div class="log-name">${l.name}</div><div class="log-detail">${lbl} — ${l.time}</div></div><div style="font-size:13px;font-weight:700;flex-shrink:0;color:${amtColor}">${prefix}${fmt(l.amount)} ج</div></div>`;
+  }).join(''):'<div class="empty">لا يوجد عمليات بعد</div>';}
+function renderReport(){document.getElementById('rep-details').innerHTML=S.merchants.filter(m=>m.totalSent>0).map(m=>{const st=m.collectStatus==='collected'?'b-done':m.collectStatus==='partial'?'b-partial':m.collectStatus==='carry'?'b-carry':'b-pending';const stTxt=m.collectStatus==='collected'?'تم':m.collectStatus==='partial'?'جزئي':m.collectStatus==='carry'?'مرحَّل':'لم يُحصَّل';const parts=(m.collectParts||[]).map(p=>`${METHS[p.meth]}: ${fmt(p.amt)} ج`).join(' + ');return`<div class="card" style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div style="flex:1;min-width:0"><div class="mname">${m.name}</div><span class="badge ${st}">${stTxt}</span>${parts?`<div style="font-size:11px;color:var(--text3);margin-top:4px">${parts}</div>`:''}</div><div style="text-align:left;font-size:12px;flex-shrink:0;margin-right:8px"><div style="color:#60a5fa">تحويل: ${fmt(m.totalSent)} ج</div><div style="color:#34d399;font-weight:600">تحصيل: ${fmt(m.totalCollected)} ج</div></div></div></div>`;}).join('')||'<div class="empty">لا يوجد تجار بعد</div>';}
+
+// ===== COLLECT MODAL — MULTI PART =====
+let collectParts=[];
+
+function buildPartRow(idx){
+  const p=collectParts[idx];
+  const opts=Object.entries(METHS).map(([k,v])=>`<option value="${k}" ${p.meth===k?'selected':''}>${v}</option>`).join('');
+  return`<div class="part-row" id="part-${idx}">
+    <select class="part-meth-sel" onchange="collectParts[${idx}].meth=this.value">${opts}</select>
+    <input type="number" class="part-amt-in" value="${p.amt||''}" placeholder="مبلغ" inputmode="numeric" oninput="collectParts[${idx}].amt=parseFloat(this.value)||0;calcCollectTotal()">
+    <button class="part-del" onclick="removeCollectPart(${idx})" ${collectParts.length===1?'style=opacity:.3;pointer-events:none':''}>✕</button>
+  </div>`;
+}
+
+function renderCollectParts(){document.getElementById('cm-parts').innerHTML=collectParts.map((_,i)=>buildPartRow(i)).join('');calcCollectTotal();}
+function addCollectPart(){collectParts.push({meth:'cash',amt:0});renderCollectParts();}
+function removeCollectPart(i){if(collectParts.length===1)return;collectParts.splice(i,1);renderCollectParts();}
+function calcCollectTotal(){
+  const masterAmt = collectParts.filter(p=>METHS_MASTER.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const handAmt   = collectParts.filter(p=>METHS_HAND.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const outAmt    = collectParts.filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const mEl=document.getElementById('cm-master');
+  const hEl=document.getElementById('cm-hand');
+  const oEl=document.getElementById('cm-out');
+  const tEl=document.getElementById('cm-total');
+  const cashAmt = collectParts.filter(p=>METHS_CASH.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const vodAmt  = collectParts.filter(p=>METHS_VOD.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const instAmt = collectParts.filter(p=>METHS_INST.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  if(mEl) mEl.textContent=fmt(masterAmt)+' ج';
+  const cEl=document.getElementById('cm-cash');
+  const vEl=document.getElementById('cm-vod');
+  const iEl=document.getElementById('cm-inst');
+  if(cEl) cEl.textContent=fmt(cashAmt)+' ج';
+  if(vEl) vEl.textContent=fmt(vodAmt)+' ج';
+  if(iEl) iEl.textContent=fmt(instAmt)+' ج';
+  if(oEl) oEl.textContent=fmt(outAmt)+' ج';
+  if(tEl) tEl.textContent=fmt(masterAmt+cashAmt+vodAmt+instAmt-outAmt)+' ج';
+  // حدّث المتاح للصرف لايف
+  const cavEl2=document.getElementById('cm-cash-avail');
+  if(cavEl2){
+    const m2=S.merchants.find(x=>x.id===editMerchantId);
+    const oldOut2=(m2?.collectParts||[]).filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+    const avail2=totalCashColl()+oldOut2;
+    const remaining2=avail2-outAmt;
+    cavEl2.textContent=fmt(Math.max(0,remaining2))+' ج';
+    cavEl2.style.color=remaining2<0?'#f87171':'#fbbf24';
+  }
+}
+
+function openCollect(id){
+  const m=S.merchants.find(x=>x.id===id);
+  editMerchantId=id;
+  // احتفظ بالأجزاء القديمة بغض النظر عن الحالة
+  const hasExisting = m.collectParts && m.collectParts.length > 0 && m.totalCollected > 0;
+  const btnLbl = hasExisting ? 'إضافة على التحصيل: ' : 'تحصيل من: ';
+  document.getElementById('cm-title').textContent = btnLbl + m.name;
+  document.getElementById('cm-sub').textContent = 'محوَّل: '+fmt(m.totalSent)+' ج | محصَّل: '+fmt(m.totalCollected)+' ج | متبقي: '+fmt(m.totalSent-m.totalCollected)+' ج';
+  if(hasExisting){
+    // حط الأجزاء القديمة كلها + صف جديد فاضي للإضافة
+    collectParts = JSON.parse(JSON.stringify(m.collectParts));
+    collectParts.push({meth:'cash', amt:0});
+  } else {
+    collectParts = [{meth:'cash', amt:0}];
+  }
+  document.getElementById('cm-note').value=m.collectNote||'';
+  // النقدي المتاح للصرف = النقدي الحالي + القديم اللي على التاجر ده (عشان لو تعديل يحسب صح)
+  const oldOut=(m.collectParts||[]).filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  const availForPay=totalCashColl()+oldOut;
+  const cavEl=document.getElementById('cm-cash-avail');
+  if(cavEl) cavEl.textContent=fmt(availForPay)+' ج';
+  renderCollectParts();
+  openModal('collect-modal');
+}
+
+function confirmCollect(){
+  const validParts=collectParts.filter(p=>p.amt>0);
+  if(!validParts.length){alert('أدخل مبلغ على الأقل');return;}
+  // تحقق: مبلغ الصرف مينفعش يعدي النقدي الحالي في إيدك
+  const newOutAmt = validParts.filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  if(newOutAmt > 0){
+    const oldOutAmt = (S.merchants.find(x=>x.id===editMerchantId)?.collectParts||[]).filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+    const currentCash = totalCashColl() + oldOutAmt; // نرجع القديم عشان نحسب صح
+    if(newOutAmt > currentCash){
+      alert('مينفعش! مبلغ الصرف ('+fmt(newOutAmt)+' ج) أكبر من النقدي في إيدك ('+fmt(currentCash)+' ج)');
+      return;
+    }
+  }
+  const note=document.getElementById('cm-note').value.trim();
+  const m=S.merchants.find(x=>x.id===editMerchantId);
+  const oldColl=m.totalCollected;
+  const masterAmt = validParts.filter(p=>METHS_MASTER.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  const handAmt   = validParts.filter(p=>METHS_HAND.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  const outAmt    = validParts.filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  const newTotal  = masterAmt + handAmt; // totalCollected = كل اللي جالك
+  // اللي وصل الماستر مباشرة يزيد الرصيد فوراً
+  // رجّع القديم اللي كان على الماستر
+  const oldMasterAmt = (m.collectParts||[]).filter(p=>METHS_MASTER.includes(p.meth)).reduce((s,p)=>s+p.amt,0);
+  // updateStats هيعيد حساب الرصيد من أول
+  m.totalCollected = newTotal;
+  m.masterCollected = masterAmt; // نحتفظ بيه للحساب
+  m.collectParts=validParts;
+  m.collectNote=note;
+  if(m.totalCollected>=m.totalSent){m.collectStatus='collected';m.totalCollected=m.totalSent;}
+  else{m.collectStatus='partial';}
+  const methods = validParts.map(p=>METHS[p.meth]+': '+fmt(p.amt)+' ج').join(' | ');
+  const t=nowTime();
+  S.logs.unshift({type:'collect',name:m.name,amount:newTotal,time:t,note,methods});
+  delete m._prevParts;
+  closeModal('collect-modal');
+  save();updateStats();renderAll();updateMethodsSummary();
+}
+
+// ===== TRANSFER =====
+let currentId=null;
+function openTransfer(id){
+  currentId=id;const m=S.merchants.find(x=>x.id===id);
+  document.getElementById('tm-title').textContent='تحويل لـ: '+m.name;
+  document.getElementById('tm-sub').textContent=[(m.machine?'ماكينة: '+m.machine:''),(m.phone?'📞 '+m.phone:'')].filter(Boolean).join(' · ')+(m.transfers.length>0?' | محوَّل: '+fmt(m.totalSent)+' ج':'');
+  document.getElementById('tm-prev').innerHTML=m.transfers.length?`<div style="background:var(--surface2);border-radius:var(--rs);padding:8px 12px;margin-bottom:12px;font-size:12px;color:var(--text3)">تحويلات سابقة: ${m.transfers.map(t=>fmt(t.amount)+' ج').join(' + ')} = <strong style="color:var(--text)">${fmt(m.totalSent)} ج</strong></div>`:'';
+  document.getElementById('tm-amt').value='';document.getElementById('tm-ref').value='';
+  document.getElementById('tm-avail').textContent=fmt(S.balance);
+  openModal('transfer-modal');setTimeout(()=>document.getElementById('tm-amt').focus(),400);
+}
+
+function confirmTransfer(){
+  const val=parseFloat(document.getElementById('tm-amt').value)||0;
+  const ref=document.getElementById('tm-ref').value.trim();
+  if(!val){alert('أدخل المبلغ');return;}
+  if(val>S.balance){alert('المبلغ أكبر من الرصيد المتاح!');return;}
+  const m=S.merchants.find(x=>x.id===currentId);const t=nowTime();
+  m.transfers.push({amount:val,time:t,ref});m.totalSent+=val;
+  // أي تحويل جديد يرجع الحالة لـ sent حتى لو كان collected قبل كده
+  if(m.collectStatus==='notsent'||m.collectStatus==='collected') m.collectStatus='sent';
+  S.logs.unshift({type:'transfer',name:m.name,amount:val,time:t,ref}); // balance بيتحسب في updateStats
+  closeModal('transfer-modal');save();updateStats();renderAll();
+}
+
+// ===== ADD / EDIT MERCHANT =====
+function openAddMerchant(){
+  editMerchantId=null;
+  ['add-name','add-machine','add-phone','add-address'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('add-modal-title').textContent='إضافة تاجر';
+  document.getElementById('add-modal-sub').textContent='أضف تاجر جديد للقائمة';
+  openModal('add-modal');
+}
+
+function openEditMerchant(id){
+  editMerchantId=id;const m=S.merchants.find(x=>x.id===id);
+  document.getElementById('add-name').value=m.name||'';
+  document.getElementById('add-machine').value=m.machine||'';
+  document.getElementById('add-phone').value=m.phone||'';
+  document.getElementById('add-address').value=m.address||'';
+  document.getElementById('add-modal-title').textContent='تعديل بيانات التاجر';
+  document.getElementById('add-modal-sub').textContent='عدّل أي بيانات وضغط حفظ';
+  openModal('add-modal');
+}
+
+function confirmAdd(){
+  const name=document.getElementById('add-name').value.trim();
+  const machine=document.getElementById('add-machine').value.trim();
+  const phone=document.getElementById('add-phone').value.trim();
+  const address=document.getElementById('add-address').value.trim();
+  if(!name){alert('أدخل اسم التاجر');return;}
+  if(editMerchantId){
+    const m=S.merchants.find(x=>x.id===editMerchantId);
+    if(m){m.name=name;m.machine=machine;m.phone=phone;m.address=address;}
+  } else {
+    S.merchants.push({id:S.mid++,name,machine,phone,address,totalSent:0,totalCollected:0,collectParts:[],transfers:[],collectStatus:'notsent'});
+  }
+  editMerchantId=null;closeModal('add-modal');save();renderAll();
+}
+
+// ===== DELETE =====
+function openDelete(id){deleteId=id;const m=S.merchants.find(x=>x.id===id);document.getElementById('del-sub').textContent=`هتحذف "${m.name}" نهائياً؟`;openModal('delete-modal');}
+function confirmDelete(){
+  const m=S.merchants.find(x=>x.id===deleteId);
+  if(!m){closeModal('delete-modal');return;}
+  // رجّع بس الفلوس اللي اتحوّلت ومش اتحصّلت لحد دلوقتي
+  const unpaid = m.totalSent - m.totalCollected;
+  if(unpaid > 0) S.balance += unpaid;
+  // احذف السجلات المتعلقة بالتاجر ده من اللوج
+  S.logs = S.logs.filter(l => l.name !== m.name || l.type !== 'transfer' || m.transfers.every(t => t.time !== l.time));
+  // أو ببساطة احذف كل لوج اسمه نفس التاجر لنفس اليوم
+  S.logs = S.logs.filter(l => l.name !== m.name);
+  S.merchants = S.merchants.filter(x=>x.id!==deleteId);
+  closeModal('delete-modal');
+  save();updateStats();renderAll();
+}
+
+// ===== IMPORT SHEET =====
+function handleFile(input){
+  const file=input.files[0];if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='csv'){
+    const reader=new FileReader();
+    reader.onload=e=>parseCSV(e.target.result);
+    reader.readAsText(file,'UTF-8');
+  } else {
+    // Excel: load SheetJS from CDN
+    if(!window.XLSX){
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload=()=>{readExcel(file);};
+      document.head.appendChild(s);
+    } else { readExcel(file); }
+  }
+}
+
+function readExcel(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const wb=XLSX.read(e.target.result,{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+    parseRows(data);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseCSV(text){
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());
+  const rows=lines.map(l=>l.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+  parseRows(rows);
+}
+
+function parseRows(rows){
+  if(rows.length<2){alert('الملف فاضي أو مش صح');return;}
+  const headers=rows[0].map(h=>String(h).trim().toLowerCase());
+  // detect columns
+  const nameIdx=headers.findIndex(h=>h.includes('اسم')||h.includes('name'));
+  const amtIdx=headers.findIndex(h=>h.includes('مبلغ')||h.includes('amount')||h.includes('قيمة'));
+  const machIdx=headers.findIndex(h=>h.includes('ماكينة')||h.includes('machine'));
+  const phoneIdx=headers.findIndex(h=>h.includes('فون')||h.includes('phone')||h.includes('موبايل'));
+  const addrIdx=headers.findIndex(h=>h.includes('عنوان')||h.includes('address'));
+  if(nameIdx===-1){alert('مش لاقي عمود "اسم" في الملف');return;}
+  importData=[];
+  rows.slice(1).forEach(r=>{
+    const name=String(r[nameIdx]||'').trim();
+    if(!name)return;
+    const amt=parseFloat(String(r[amtIdx]||'0').replace(/,/g,''))||0;
+    const machine=machIdx>=0?String(r[machIdx]||'').trim():'';
+    const phone=phoneIdx>=0?String(r[phoneIdx]||'').trim():'';
+    const address=addrIdx>=0?String(r[addrIdx]||'').trim():'';
+    const existing=S.merchants.find(m=>m.name===name||(machine&&m.machine===machine));
+    importData.push({name,amt,machine,phone,address,existing:!!existing,existingId:existing?.id});
+  });
+  if(!importData.length){alert('مفيش بيانات صالحة في الملف');return;}
+  // show preview
+  const newCount=importData.filter(d=>!d.existing).length;
+  const updCount=importData.filter(d=>d.existing).length;
+  document.getElementById('import-summary').textContent=`${importData.length} تاجر: ${newCount} جديد، ${updCount} موجود هيتضاف ليه تحويل`;
+  document.getElementById('import-rows').innerHTML=importData.map(d=>`<div class="import-row"><span class="${d.existing?'imp-exist':'imp-new'}">${d.existing?'✓':'＋'} ${d.name}${d.machine?' ('+d.machine+')':''}</span><span>${fmt(d.amt)} ج</span></div>`).join('');
+  document.getElementById('import-preview').style.display='block';
+  document.getElementById('import-confirm-btn').style.display='block';
+}
+
+function confirmImport(){
+  if(!importData.length)return;
+  let added=0,updated=0;
+  importData.forEach(d=>{
+    if(!d.amt)return;
+    if(d.existing&&d.existingId){
+      const m=S.merchants.find(x=>x.id===d.existingId);
+      if(m){
+        // add transfer
+        const t=nowTime();
+        m.transfers.push({amount:d.amt,time:t,ref:'استيراد'});
+        m.totalSent+=d.amt;S.balance-=d.amt;
+        if(m.collectStatus==='notsent') m.collectStatus='sent';
+        S.logs.unshift({type:'transfer',name:m.name,amount:d.amt,time:t,ref:'استيراد'});
+        updated++;
+      }
+    } else {
+      // add new merchant + transfer
+      const id=S.mid++;
+      S.merchants.push({id,name:d.name,machine:d.machine,phone:d.phone,address:d.address,totalSent:d.amt,totalCollected:0,collectParts:[],transfers:[{amount:d.amt,time:nowTime(),ref:'استيراد'}],collectStatus:'sent'});
+      S.logs.unshift({type:'transfer',name:d.name,amount:d.amt,time:nowTime(),ref:'استيراد'});
+      added++;
+    }
+  });
+  importData=[];
+  document.getElementById('import-preview').style.display='none';
+  document.getElementById('import-confirm-btn').style.display='none';
+  document.getElementById('file-input').value='';
+  closeModal('import-modal');
+  save();updateStats();renderAll();
+  alert(`✅ تم الاستيراد!\n${added} تاجر جديد — ${updated} تاجر اتحدَّث`);
+}
+
+// ===== CALENDAR =====
+let calYear,calMonth,selectedDay=null;
+function initCal(){const d=new Date();calYear=d.getFullYear();calMonth=d.getMonth();}
+initCal();
+function renderCalendar(){
+  const days=['ح','ن','ث','ر','خ','ج','س'];
+  document.getElementById('cal-headers').innerHTML=days.map(d=>`<div class="cal-hdr">${d}</div>`).join('');
+  const todayStr=todayKey();const first=new Date(calYear,calMonth,1).getDay();const dim=new Date(calYear,calMonth+1,0).getDate();
+  const mn=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  document.getElementById('cal-month-lbl').textContent=mn[calMonth]+' '+calYear;
+  let html='';for(let i=0;i<first;i++)html+=`<div class="cal-day empty-day"></div>`;
+  for(let day=1;day<=dim;day++){const key=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');const hasData=H[key]||(key===S.date&&S.logs.length>0);const isToday=key===todayStr;const isSel=key===selectedDay;let cls='cal-day';if(hasData)cls+=' has-data';if(isToday)cls+=' today';if(isSel)cls+=' selected';html+=`<div class="${cls}" onclick="selectDay('${key}')">${day}</div>`;}
+  document.getElementById('cal-grid').innerHTML=html;
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function selectDay(key){
+  selectedDay=key;renderCalendar();
+  const snap=H[key]||(key===S.date?S:null);
+  const p=key.split('-');const d=new Date(p[0],p[1]-1,p[2]);
+  document.getElementById('hist-sec-title').textContent='بيانات '+d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+  if(!snap||snap.logs.length===0){document.getElementById('hist-content').innerHTML='<div class="empty">لا يوجد بيانات لهذا اليوم</div>';return;}
+  const sent=snap.merchants.reduce((s,m)=>s+m.totalSent,0);const coll=snap.merchants.reduce((s,m)=>s+m.totalCollected,0);
+  let html=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div class="metric"><div class="m-lbl">محوَّل</div><div class="m-val c-blue" style="font-size:16px">${fmt(sent)} ج</div></div>
+      <div class="metric"><div class="m-lbl">محصَّل</div><div class="m-val c-green" style="font-size:16px">${fmt(coll)} ج</div></div>
+    </div>
+    ${snap.merchants.filter(m=>m.totalSent>0).map(m=>{const ic=m.collectStatus==='collected'?'✅':m.collectStatus==='partial'?'🔶':m.collectStatus==='carry'?'⏩':'❌';const parts=(m.collectParts||[]).map(p=>METHS[p.meth]+': '+fmt(p.amt)+' ج').join(' + ');return`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span>${ic} ${m.name}</span><div style="text-align:left"><div style="color:var(--text2)">${fmt(m.totalCollected)}/${fmt(m.totalSent)} ج</div>${parts?`<div style="font-size:10px;color:var(--text3)">${parts}</div>`:''}</div></div>`;}).join('')}
+  </div>`;
+  document.getElementById('hist-content').innerHTML=html;
+}
+
+// ===== MODAL HELPERS =====
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function overlayClose(e,id){if(e.target===e.currentTarget)closeModal(id);}
+function switchTab(tab,el){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+tab).classList.add('active');if(tab==='history')renderCalendar();}
+
+// ===== SHARE =====
+function buildReport(){
+  const sent=totalSent(),coll=totalColl(),rem=sent-coll;const p=S.date.split('-');const d=new Date(p[0],p[1]-1,p[2]);
+  let t=`📋 تقرير التحصيل\n📅 ${d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'})}\n━━━━━━━━━━━━━━\n`;
+  t+=`💰 رصيد أول اليوم: ${fmt(S.opening)} ج\n📤 إجمالي محوَّل: ${fmt(sent)} ج\n📥 إجمالي محصَّل: ${fmt(coll)} ج\n⏳ متبقي: ${fmt(rem)} ج\n🏦 رصيد الآن: ${fmt(S.balance)} ج\n━━━━━━━━━━━━━━\n`;
+  S.merchants.filter(m=>m.totalSent>0).forEach(m=>{const ic=m.collectStatus==='collected'?'✅':m.collectStatus==='partial'?'🔶':m.collectStatus==='carry'?'⏩':'❌';const parts=(m.collectParts||[]).filter(p=>p.amt>0).map(p=>METHS[p.meth]+': '+fmt(p.amt)+' ج').join(' + ');t+=`${ic} ${m.name}: حوَّل ${fmt(m.totalSent)} ج — جمَّع ${fmt(m.totalCollected)} ج${parts?' ('+parts+')':''}\n`;});
+  return t;
+}
+function shareReport(){window.open('https://wa.me/?text='+encodeURIComponent(buildReport()),'_blank');}
+function copyReport(){const txt=buildReport();if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(()=>alert('✅ تم النسخ!')).catch(()=>fbCopy(txt));}else{fbCopy(txt);}}
+function fbCopy(txt){const el=document.createElement('textarea');el.value=txt;el.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(el);el.focus();el.select();try{document.execCommand('copy');alert('✅ تم النسخ!');}catch(e){alert('افتح واتساب وارسل يدوياً.');}document.body.removeChild(el);}
+
+// ===== DELETE COLLECT =====
+let delCollectId=null;
+function deleteCollect(id){
+  delCollectId=id;
+  const m=S.merchants.find(x=>x.id===id);
+  if(!m)return;
+  document.getElementById('del-collect-sub').textContent='هتحذف تحصيلة "'+m.name+'" ('+fmt(m.totalCollected)+' ج) — الفلوس هترجع للحساب.';
+  const btn=document.getElementById('del-collect-confirm-btn');
+  btn.onclick=function(){
+    const m2=S.merchants.find(x=>x.id===delCollectId);
+    if(!m2){closeModal('del-collect-modal');return;}
+    // التحصيل مش بيأثر على الرصيد — مش محتاج نرجع حاجة
+    m2.totalCollected=0;
+    m2.collectParts=[];
+    m2.collectNote='';
+    m2.collectStatus = m2.totalSent>0 ? 'sent' : 'notsent';
+    S.logs = S.logs.filter(l=>!(l.name===m2.name&&l.type==='collect'));
+    closeModal('del-collect-modal');
+    save();updateStats();renderAll();
+  };
+  openModal('del-collect-modal');
+}
+
+// ===== توريد — إضافة فلوس للرصيد =====
+function merchantCashAvail(m){
+  const handIn =(m.collectParts||[]).filter(p=>METHS_HAND.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  const handOut=(m.collectParts||[]).filter(p=>METHS_OUT.includes(p.meth)).reduce((s,p)=>s+(p.amt||0),0);
+  return Math.max(0, handIn-handOut);
+}
+
+function openDeposit(merchantId){
+  const totalCash=totalCashColl();
+  const usedDep=S.logs.filter(l=>l.type==='deposit').reduce((s,l)=>s+l.amount,0);
+  const avail=Math.max(0,totalCash-usedDep);
+  document.getElementById('dep-amt').value='';
+  document.getElementById('dep-note').value='';
+  document.getElementById('dep-source-manual').value='';
+  document.getElementById('dep-avail-modal').textContent=fmt(avail);
+  // populate merchant dropdown with cash-available merchants
+  const sel=document.getElementById('dep-source');
+  const merchants=S.merchants.filter(m=>merchantCashAvail(m)>0);
+  sel.innerHTML='<option value="">— اختر تاجر —</option>'+
+    merchants.map(m=>`<option value="${m.name}" data-cash="${merchantCashAvail(m)}">${m.name} — نقدي: ${fmt(merchantCashAvail(m))} ج</option>`).join('')+
+    '<option value="_other">مصدر تاني...</option>';
+  // pre-select if merchantId passed
+  if(merchantId){
+    const m=S.merchants.find(x=>x.id===merchantId);
+    if(m){
+      sel.value=m.name;
+      const ca=merchantCashAvail(m);
+      document.getElementById('dep-amt').value=ca>0?ca:'';
+    }
+  }
+  sel.onchange=function(){
+    const opt=sel.options[sel.selectedIndex];
+    const cash=parseFloat(opt?.dataset?.cash||0);
+    if(cash>0) document.getElementById('dep-amt').value=cash;
+    document.getElementById('dep-source-manual').style.display=sel.value==='_other'?'block':'none';
+  };
+  document.getElementById('dep-source-manual').style.display='none';
+  document.querySelectorAll('.dep-meth-btn').forEach((b,i)=>{b.classList.toggle('meth-active',i===0);});
+  openModal('deposit-modal');
+}
+function selDepMeth(btn){document.querySelectorAll('.dep-meth-btn').forEach(b=>b.classList.remove('meth-active'));btn.classList.add('meth-active');}
+function confirmDeposit(){
+  const val=parseFloat(document.getElementById('dep-amt').value)||0;
+  const selVal=document.getElementById('dep-source').value;
+  const manualVal=document.getElementById('dep-source-manual').value.trim();
+  const source=selVal==='_other'?(manualVal||'توريد'):selVal||manualVal||'توريد';
+  const note=document.getElementById('dep-note').value.trim();
+  const meth=document.querySelector('.dep-meth-btn.meth-active')?.dataset.meth||'cash';
+  if(!val){alert('أدخل المبلغ');return;}
+  // تحقق: مينفعش اعمل توريد لو مفيش محصل
+  const availColl=totalCashColl();
+  if(availColl<=0){alert('مينفعش توريد — مفيش نقدي محصَّل بعد!');return;}
+  // تحقق: مينفعش اكبر من النقدي المحصَّل
+  const usedDep=S.logs.filter(l=>l.type==='deposit').reduce((s,l)=>s+l.amount,0);
+  const avail=availColl-usedDep;
+  if(val>avail){alert('المبلغ أكبر من المتاح للتوريد ('+fmt(avail)+' ج)');return;}
+  // balance بيتحسب أوتوماتيك في updateStats (opening - transfers + deposits)
+  const methLbl=METHS[meth]||meth;
+  S.logs.unshift({type:'deposit',name:source,amount:val,time:nowTime(),note,method:methLbl});
+  closeModal('deposit-modal');
+  save();updateStats();renderAll();renderDepositScreen();
+}
+
+// ===== تصدير / استيراد التجار =====
+function renderDepositScreen(){
+  const deps=S.logs.filter(l=>l.type==='deposit');
+  const totalDep=deps.reduce((s,l)=>s+l.amount,0);
+  const availColl=totalCashColl();
+  const avail=Math.max(0,availColl-totalDep);
+  const el=document.getElementById('dep-total-display');
+  const el2=document.getElementById('dep-available');
+  if(el) el.textContent=fmt(totalDep);
+  if(el2) el2.textContent=fmt(avail);
+  // merchants cash list
+  const mListEl=document.getElementById('deposit-merchants-list');
+  if(mListEl){
+    const withCash=S.merchants.filter(m=>merchantCashAvail(m)>0);
+    if(!withCash.length){
+      mListEl.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:10px">لا يوجد نقدي متاح من التجار</div>';
+    } else {
+      mListEl.innerHTML=withCash.map((m,i)=>`
+        <div class="card" style="margin-bottom:8px">
+          <div class="mrow">
+            <div class="av ${['av0','av1','av2'][i%3]}">${ini(m.name)}</div>
+            <div class="minfo">
+              <div class="mname">${m.name}</div>
+              <div class="msub">${m.machine||'—'}</div>
+            </div>
+            <div style="text-align:left">
+              <div style="font-size:15px;font-weight:700;color:#fbbf24">${fmt(merchantCashAvail(m))} ج</div>
+              <button class="btn btn-green" style="margin-top:4px;font-size:11px;padding:5px 10px" onclick="openDeposit(${m.id})">توريد</button>
+            </div>
+          </div>
+        </div>`).join('');
+    }
+  }
+  // deposit log
+  const listEl=document.getElementById('deposit-log-list');
+  if(!listEl)return;
+  if(!deps.length){listEl.innerHTML='<div class="empty">لا يوجد توريد مسجل بعد</div>';return;}
+  listEl.innerHTML=deps.map((l,i)=>`
+    <div class="log-item">
+      <div class="log-dot" style="background:#fbbf24"></div>
+      <div style="flex:1">
+        <div class="log-name">${l.name}</div>
+        <div class="log-detail">${l.method||'توريد'} — ${l.time}${l.note?' — '+l.note:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:13px;font-weight:700;color:#fbbf24">+${fmt(l.amount)} ج</div>
+        <button class="del-btn" onclick="deleteDeposit(${i})" style="font-size:10px;padding:4px 8px">حذف</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteDeposit(logIdx){
+  const depLogs=S.logs.filter(l=>l.type==='deposit');
+  if(logIdx>=depLogs.length)return;
+  const dep=depLogs[logIdx];
+  // find index in full logs
+  const fullIdx=S.logs.findIndex(l=>l===dep);
+  if(fullIdx===-1)return;
+  S.logs.splice(fullIdx,1); // balance بيتحسب أوتوماتيك في updateStats
+  save();updateStats();renderAll();renderDepositScreen();
+}
+
+// ===== PAYOUT — صرف نقدي لتاجر =====
+function openPayout(){
+  // populate merchant select
+  const sel=document.getElementById('payout-name-sel');
+  sel.innerHTML='<option value="">— اختر تاجر من القائمة —</option>'+
+    S.merchants.map(m=>`<option value="${m.name}">${m.name}${m.machine?' — '+m.machine:''}</option>`).join('')+
+    '<option value="_other">تاجر مش في القائمة...</option>';
+  document.getElementById('payout-name-manual').style.display='none';
+  document.getElementById('payout-name-manual').value='';
+  document.getElementById('payout-amt').value='';
+  document.getElementById('payout-return-amt').value='';
+  document.getElementById('payout-note').value='';
+  document.getElementById('payout-avail').textContent=fmt(totalCashColl())+' ج';
+  document.getElementById('payout-net').textContent='0 ج';
+  document.querySelectorAll('.payout-ret-btn').forEach((b,i)=>b.classList.toggle('meth-active',i===0));
+  openModal('payout-modal');
+}
+
+function onPayoutSelChange(){
+  const val=document.getElementById('payout-name-sel').value;
+  const manEl=document.getElementById('payout-name-manual');
+  manEl.style.display=val==='_other'?'block':'none';
+  if(val!=='_other'&&val!=='') manEl.value='';
+}
+
+function selPayoutRet(btn){
+  document.querySelectorAll('.payout-ret-btn').forEach(b=>b.classList.remove('meth-active'));
+  btn.classList.add('meth-active');
+  updatePayoutReturn();
+}
+
+function updatePayoutReturn(){
+  const paid=parseFloat(document.getElementById('payout-amt').value)||0;
+  const ret=parseFloat(document.getElementById('payout-return-amt').value)||0;
+  const net=ret-paid;
+  const el=document.getElementById('payout-net');
+  if(el){ el.textContent=fmt(net)+' ج'; el.style.color=net>=0?'var(--green-l)':'#f87171'; }
+}
+
+function confirmPayout(){
+  const selVal=document.getElementById('payout-name-sel').value;
+  const manVal=document.getElementById('payout-name-manual').value.trim();
+  const name=(selVal==='_other'||selVal==='')?manVal||'صرف نقدي':selVal;
+  const paid=parseFloat(document.getElementById('payout-amt').value)||0;
+  const retAmt=parseFloat(document.getElementById('payout-return-amt').value)||0;
+  const retMeth=document.querySelector('.payout-ret-btn.meth-active')?.dataset.meth||'return_machine';
+  const note=document.getElementById('payout-note').value.trim();
+  if(!paid){alert('أدخل المبلغ المصروف');return;}
+  // تحقق: النقدي في إيدك كافي
+  if(paid>totalCashColl()){alert('مينفعش! النقدي في إيدك ('+fmt(totalCashColl())+' ج) أقل من المبلغ المصروف');return;}
+  if(!retAmt){alert('أدخل المبلغ اللي رجعلك');return;}
+  const t=nowTime();
+  // سجّل كـ payout في اللوج
+  S.logs.unshift({type:'payout',name,paidAmt:paid,retAmt,retMeth,retMethLbl:METHS[retMeth]||retMeth,time:t,note});
+  // أثّر على الأرصدة حسب طريقة الإرجاع
+  if(METHS_MASTER.includes(retMeth)){
+    // وصل الماستر مباشرة → يزيد رصيد الماستر
+    S.logs[0].masterEffect=retAmt;
+  }
+  // paid_cash effect: ينقص من النقدي في إيدك
+  // نسجله كـ virtual collectPart على merchant وهمي
+  // أبسط طريقة: نضيف للـ logs فقط ونحسب في totalByMeth
+  closeModal('payout-modal');
+  save();updateStats();renderAll();
+  // update balance: payout to master increases balance
+  updateStats();
+}
+
+function exportMerchants(){
+  const data=S.merchants.map(m=>({name:m.name,machine:m.machine||'',phone:m.phone||'',address:m.address||''}));
+  const txt='MERCHANTS:'+btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(()=>alert('✅ تم نسخ بيانات '+data.length+' تاجر!\nالصقها في التطبيق الجديد من نفس الزرار.')).catch(()=>fbExport(txt));
+  } else { fbExport(txt); }
+}
+function importMerchantsPrompt(){
+  const txt=prompt('الصق كود التجار هنا:');
+  if(!txt)return;
+  try{
+    let raw=txt.trim();
+    if(raw.startsWith('MERCHANTS:')){raw=raw.replace('MERCHANTS:','');}
+    const data=JSON.parse(decodeURIComponent(escape(atob(raw))));
+    let added=0;
+    data.forEach(d=>{
+      if(!d.name)return;
+      const exists=S.merchants.find(m=>m.name===d.name||(d.machine&&m.machine===d.machine));
+      if(!exists){
+        S.merchants.push({id:S.mid++,name:d.name,machine:d.machine||'',phone:d.phone||'',address:d.address||'',totalSent:0,totalCollected:0,collectParts:[],transfers:[],collectStatus:'notsent'});
+        added++;
+      }
+    });
+    save();renderAll();
+    alert('✅ تم استيراد '+added+' تاجر جديد!');
+  }catch(e){alert('❌ الكود مش صح');}
+}
+
+// ===== EXPORT / IMPORT DATA =====
+function exportData(){
+  const payload = {S: S, H: H, exported: new Date().toISOString()};
+  const json = JSON.stringify(payload);
+  // encode to base64 so it's easy to copy/paste
+  const b64 = btoa(unescape(encodeURIComponent(json)));
+  const chunk = 1800;
+  // if short enough, copy directly
+  const txt = 'TAHSEEL_DATA:' + b64;
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(()=>{
+      alert('✅ تم نسخ البيانات!\n\nافتح التطبيق الجديد — التقرير — استيراد بيانات — والصق الكود.');
+    }).catch(()=>fbExport(txt));
+  } else { fbExport(txt); }
+}
+
+function fbExport(txt){
+  const el=document.createElement('textarea');
+  el.value=txt;
+  el.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';
+  document.body.appendChild(el);el.focus();el.select();
+  try{document.execCommand('copy');alert('✅ تم نسخ البيانات!\n\nافتح التطبيق الجديد — التقرير — استيراد بيانات — والصق الكود.');}
+  catch(e){
+    // fallback: show in prompt so user can copy manually
+    prompt('انسخ الكود ده كله:', txt);
+  }
+  document.body.removeChild(el);
+}
+
+function importBackupData(){
+  const txt = document.getElementById('import-data-txt').value.trim();
+  const msgEl = document.getElementById('import-data-msg');
+  if(!txt){alert('الصق الكود أولاً');return;}
+  try{
+    let json;
+    if(txt.startsWith('TAHSEEL_DATA:')){
+      const b64 = txt.replace('TAHSEEL_DATA:','');
+      json = decodeURIComponent(escape(atob(b64)));
+    } else {
+      // try raw JSON
+      json = txt;
+    }
+    const payload = JSON.parse(json);
+    if(!payload.S || !payload.S.merchants){
+      msgEl.style.display='block';msgEl.style.color='#fca5a5';
+      msgEl.textContent='❌ الكود مش صح — تأكد إنك نسخت كل الكود من التطبيق القديم';
+      return;
+    }
+    S = payload.S;
+    H = payload.H || {};
+    // make sure date field exists
+    if(!S.date) S.date = todayKey();
+    save();
+    closeModal('import-data-modal');
+    document.getElementById('import-data-txt').value='';
+    // show app
+    document.getElementById('setup').style.display='none';
+    document.getElementById('app').style.display='flex';
+    setDate();renderAll();updateStats();showCarryBanners();
+    const mCount = S.merchants.length;
+    alert('✅ تم الاستيراد بنجاح!\n' + mCount + ' تاجر اتنقلوا للتطبيق الجديد.');
+  } catch(e){
+    msgEl.style.display='block';msgEl.style.color='#fca5a5';
+    msgEl.textContent='❌ في خطأ في الكود — تأكد إنك نسخت كل الكود كامل';
+  }
+}
+</script>
+</body>
+</html>
